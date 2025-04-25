@@ -2,7 +2,8 @@ import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {selectArtist} from "./artistsSlice.ts";
 import {useEffect} from "react";
 import {fetchAllArtists} from "./artistsThunks.ts";
-import {Card, CardHeader, CardMedia, Grid, Typography} from "@mui/material";
+import {Card, CardActions, CardHeader, CardMedia, Grid, IconButton, Typography} from "@mui/material";
+import {Link} from "react-router-dom";
 
 const Artists = () => {
     const dispatch = useAppDispatch();
@@ -19,7 +20,7 @@ const Artists = () => {
                 ) : (
                 <Grid>
                     {artists.map(artist => (
-                        <Card key={artist.id}>
+                        <Card key={artist._id}>
                             <CardMedia
                                 component="img"
                                 height="200"
@@ -27,6 +28,11 @@ const Artists = () => {
                                 alt={artist.name}
                             />
                             <CardHeader title={artist.name} />
+                            <CardActions>
+                                <IconButton component={Link} to={'/albums/' + artist._id}>
+                                    Перейти
+                                </IconButton>
+                            </CardActions>
                         </Card>
                     ))
                     }
