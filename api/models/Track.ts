@@ -9,7 +9,7 @@ const TrackSchema = new mongoose.Schema({
         required: [true, 'Название обьязательное поле'],
     },
     album: {
-        type: [Schema.Types.ObjectId, 'Album not found'],
+        type: Schema.Types.ObjectId,
         ref: "Album",
         required: true,
         validate: {

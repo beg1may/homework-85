@@ -14,7 +14,7 @@ albumsRouter.get("/", async (req, res, next) => {
             filter['artist'] = String(req.query.artist);
         }
 
-        const album = await Album.find(filter);
+        const album = await Album.find(filter).populate("artist").sort({yearOfManufacture: -1});
         res.send(album);
     } catch (e) {
         next(e);
@@ -25,7 +25,7 @@ albumsRouter.get("/:id", async (req, res, next) => {
     try {
         const id = req.params.id;
 
-        const album = await Album.findById(id).populate("artist");
+        const album = await Album.findById(id).populate("artists");
 
         if(!album) {
             res.status(404).send("No album Found");

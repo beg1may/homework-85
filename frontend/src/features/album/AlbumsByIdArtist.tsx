@@ -26,6 +26,11 @@ const AlbumsByIdArtist = () => {
     }, [id, dispatch]);
     return (
         <Box sx={{ padding: 4 }}>
+            {albums[0]?.artist?.name && (
+                <Typography gutterBottom variant="h4" component="div">
+                    {albums[0].artist.name}
+                </Typography>
+            )}
             {albums.length === 0 ? (
                 <Typography variant='h4'>No album yet</Typography>
             ) : (

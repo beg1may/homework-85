@@ -22,6 +22,11 @@ const TracksByIdAlbum = () => {
                 <Typography variant='h4'>No tracks yet</Typography>
             ) : (
                 <Grid container spacing={4} justifyContent="center">
+                    {tracks[0]?.album?.name && (
+                        <Typography gutterBottom variant="h4" component="div">
+                            {tracks[0].album.name}
+                        </Typography>
+                    )}
                     {tracks.map(track => (
                         <Grid key={track._id} size={{xs:12, sm:6, md:4, lg:3}}>
                             <Card sx={{borderRadius: 3}}>
