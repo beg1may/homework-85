@@ -8,6 +8,14 @@ export interface Artist {
 export interface AlbumByIdArtistInfo {
     _id: string;
     name: string;
+    artist: string;
     image?: string | null;
     yearOfManufacture: number;
+}
+
+export interface TrackByIdAlbum {
+    _id: string;
+    numberTrack: number;
+    name: string;
+    duration: string;
 }

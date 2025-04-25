@@ -9,7 +9,7 @@ const AlbumSchema = new mongoose.Schema({
         required: [true, 'Имя обьязательное поле'],
     },
     artist: {
-        type: [Schema.Types.ObjectId, 'Artist not found'],
+        type: Schema.Types.ObjectId,
         ref: "Artist",
         required: true,
         validate: {

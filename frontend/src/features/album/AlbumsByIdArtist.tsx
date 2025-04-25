@@ -1,19 +1,19 @@
 import {
     Box,
-    Card,
+    Card, CardActions,
     CardContent,
     CardMedia,
-    Grid,
+    Grid, IconButton,
     Typography
 } from "@mui/material";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
-import {selectAlbumByIdArtist} from "./artistsSlice.ts";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useEffect} from "react";
-import {fetchAlbumByIdArtist} from "./artistsThunks.ts";
+import {selectAlbumByIdArtist} from "./albumsSlice.ts";
+import {fetchAlbumByIdArtist} from "./albumsThunks.ts";
 
 
-const FullArtist = () => {
+const AlbumsByIdArtist = () => {
     const dispatch = useAppDispatch();
     const albums = useAppSelector(selectAlbumByIdArtist);
 
@@ -47,6 +47,11 @@ const FullArtist = () => {
                                         {album.yearOfManufacture}
                                     </Typography>
                                 </CardContent>
+                                <CardActions>
+                                    <IconButton component={Link} to={'/tracks/' + album._id}>
+                                        Перейти
+                                    </IconButton>
+                                </CardActions>
                             </Card>
                         </Grid>
                     ))
@@ -58,4 +63,4 @@ const FullArtist = () => {
     );
 };
 
-export default FullArtist;
+export default AlbumsByIdArtist;

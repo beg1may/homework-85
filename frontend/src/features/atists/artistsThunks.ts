@@ -10,11 +10,3 @@ export const fetchAllArtists = createAsyncThunk<Artist[], void>(
     }
 );
 
-export const fetchAlbumByIdArtist = createAsyncThunk<AlbumByIdArtistInfo[], string>(
-    'artists/fetchAlbumByIdArtist',
-    async (artist_id) => {
-        const response = await axiosApi.get<AlbumByIdArtistInfo[]>(`/albums?artist=${artist_id}`);
-        return response.data;
-    }
-);
-

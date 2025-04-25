@@ -14,8 +14,6 @@ albumsRouter.get("/", async (req, res, next) => {
             filter['artist'] = String(req.query.artist);
         }
 
-        console.log(filter);
-
         const album = await Album.find(filter);
         res.send(album);
     } catch (e) {
