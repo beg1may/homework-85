@@ -9,3 +9,18 @@ export const fetchTracksByIdAlbum = createAsyncThunk<TrackByIdAlbum[], string>(
         return response.data;
     }
 );
+
+export const addingTracksToHistory = createAsyncThunk<void, { id: string, token: string }>(
+    'tracks/addTracksToHistory',
+    async ({id, token}) => {
+        try {
+            await axiosApi.post('/track_history', { track: id }, {
+                headers: {
+                    'Authorization': token,
+                },
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+);
