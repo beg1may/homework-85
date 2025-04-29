@@ -29,6 +29,10 @@ const TrackHistorySchema = new mongoose.Schema({
             message: "Track not found",
         },
     },
+    artist: {
+        type: String,
+        required: true,
+    },
     datetime: {
         type: Date,
         default: Date.now,

@@ -2,6 +2,7 @@ import express from "express";
 import Track from "../models/Track";
 import {Error} from "mongoose";
 import {ITrackWithoutId} from "../types";
+import auth, {RequestWithUser} from "../middleware/auth";
 
 const trackRouter = express.Router();
 

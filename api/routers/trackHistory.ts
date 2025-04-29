@@ -1,39 +1,59 @@
 import express from "express";
-import User from "../models/User";
 import {Error} from "mongoose";
 import TrackHistory from "../models/TrackHistory";
-
+import auth, {RequestWithUser} from "../middleware/auth";
+import Track from "./../models/Track";
+import Album from "../models/Album";
+import Artist from "../models/Artist";
 const trackHistoryRouter = express.Router();
 
-trackHistoryRouter.post("/", async (req, res, next) => {
+trackHistoryRouter.post("/", auth, (async (req, res, next) => {
     try {
-        const token = req.get("Authorization");
+        const user = (req as RequestWithUser).user;
 
-        if(!token) {
-            res.status(401).send("Token not found");
+        const track = await Track.findById(req.body.track);
+        if (!track) {
+            res.status(404).send({ error: 'Track not found' });
             return;
         }
 
-        const user = await User.findOne({token});
+        const album = await Album.findById(track.album);
+        if (!album) {
+            res.status(404).send({ error: 'Album not found' });
+            return;
+        }
 
-        if(!user) {
-            res.status(401).send("Wrong token or track");
+        const artist = await Artist.findById(album.artist);
+        if (!artist) {
+            res.status(404).send({ error: 'Artist not found' });
             return;
         }
 
         const trackHistory = new TrackHistory({
             user: user._id,
             track: req.body.track,
+            artist: artist.name,
         });
 
-        res.send({trackHistory});
+        await trackHistory.save();
+        res.send({ trackHistory });
     } catch (error) {
-        if(error instanceof  Error.ValidationError) {
+        if (error instanceof Error.ValidationError) {
             res.status(400).send(error);
             return;
         }
         next(error);
     }
-})
+}));
+
+trackHistoryRouter.get('/', auth, async (req, res, next) => {
+    try {
+        const user = (req as RequestWithUser).user._id;
+        const track = await TrackHistory.find({user: user});
+        res.send(track);
+    } catch (e) {
+        console.error(e);
+    }
+});
 
 export default trackHistoryRouter;
