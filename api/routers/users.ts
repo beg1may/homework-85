@@ -24,7 +24,7 @@ usersRouter.post('/', async (req, res, next) => {
     }
 });
 
-usersRouter.post('/session', async (req, res, next) => {
+usersRouter.post('/sessions', async (req, res, next) => {
     try {
         if(!req.body.username || !req.body.password) {
             res.status(401).send('Username and password are required');
@@ -52,6 +52,28 @@ usersRouter.post('/session', async (req, res, next) => {
     } catch (e) {
         next(e);
     }
-})
+});
+
+usersRouter.delete('/sessions', async (req, res, next) => {
+    const token = req.get('Authorization');
+
+    if(!token){
+        res.send({message: 'Success logout'});
+        return;
+    }
+
+    try {
+        const user = await User.findOne({token});
+
+        if(user) {
+            user.generateToken();
+            await user.save();
+        }
+
+        res.send({message: 'Success logout'});
+    } catch (e) {
+        next(e);
+    }
+});
 
 export default usersRouter;

@@ -33,6 +33,10 @@ const TrackSchema = new mongoose.Schema({
             },
             message: "Number track must be number",
         },
+    },
+    isPublished: {
+        type: Boolean,
+        default: false,
     }
 });
 

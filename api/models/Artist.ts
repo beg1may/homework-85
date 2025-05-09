@@ -9,6 +9,10 @@ const ArtistSchema = new mongoose.Schema({
     information: {
         type: String,
         required: [true, 'Информация обьязательное поле'],
+    },
+    isPublished: {
+        type: Boolean,
+        default: false,
     }
 });
 
