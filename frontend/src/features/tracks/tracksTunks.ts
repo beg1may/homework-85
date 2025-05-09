@@ -1,6 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {TrackByIdAlbum} from "../../types";
+import {TrackByIdAlbum, TrackMutation} from "../../types";
 import axiosApi from "../../axiosApi.ts";
+import {RootState} from "../../../app/store.ts";
 
 export const fetchTracksByIdAlbum = createAsyncThunk<TrackByIdAlbum[], string>(
     'tracks/fetchTracksByIdAlbum',
@@ -22,5 +23,19 @@ export const addingTracksToHistory = createAsyncThunk<void, { id: string, token:
         } catch (e) {
             console.error(e);
         }
+    }
+);
+
+export const createTrack = createAsyncThunk<void, TrackMutation, { state: RootState }>(
+    'tracks/createTrack',
+    async (trackToAdd,{getState}) => {
+        const token = getState().users.user?.token;
+
+        await axiosApi.post('/tracks', trackToAdd, {
+            headers: {
+                'Authorization': token,
+            },
+        });
+
     }
 );

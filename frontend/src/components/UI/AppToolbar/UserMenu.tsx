@@ -46,6 +46,9 @@ const UserMenu = () => {
                         <MenuItem>
                             <Button component={NavLink} to='/albums/new'>Add album</Button>
                         </MenuItem>
+                        <MenuItem>
+                            <Button component={NavLink} to='/tracks/new'>Add track</Button>
+                        </MenuItem>
                     </>
                 }
                 <MenuItem>

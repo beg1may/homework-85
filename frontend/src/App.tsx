@@ -13,6 +13,7 @@ import ProtectedRoute from "./components/UI/ProtectedRoute/ProtectedRoute.tsx";
 import {useAppSelector} from "../app/hooks.ts";
 import {selectUser} from "./features/users/usersSlice.ts";
 import NewAlbum from "./features/album/NewAlbum.tsx";
+import NewTrack from "./features/tracks/NewTrack.tsx";
 
 function App() {
     const user = useAppSelector(selectUser);
@@ -35,6 +36,9 @@ function App() {
                  }/>
                  <Route path='/albums/new' element={
                      <ProtectedRoute isAllowed={Boolean(user)}><NewAlbum /></ProtectedRoute>
+                 }/>
+                 <Route path='/tracks/new' element={
+                     <ProtectedRoute isAllowed={Boolean(user)}><NewTrack /></ProtectedRoute>
                  }/>
                  <Route path="/register" element={<Register/>}/>
                  <Route path="/login" element={<Login />}/>

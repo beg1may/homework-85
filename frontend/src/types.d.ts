@@ -40,6 +40,13 @@ export interface TrackByIdAlbum {
     duration: string;
 }
 
+export interface TrackMutation {
+    album: string;
+    numberTrack: number;
+    name: string;
+    duration: string;
+}
+
 export interface User {
     _id: string;
     username: string;

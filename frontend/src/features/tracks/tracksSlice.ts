@@ -1,16 +1,18 @@
 import {TrackByIdAlbum} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../../app/store.ts";
-import {addingTracksToHistory, fetchTracksByIdAlbum} from "./tracksTunks.ts";
+import {addingTracksToHistory, createTrack, fetchTracksByIdAlbum} from "./tracksTunks.ts";
 interface TracksState {
     items: TrackByIdAlbum[];
     fetchLoading: boolean;
+    createLoading: boolean;
     trackHistoryLoading: boolean;
 }
 
 const initialState: TracksState = {
     items: [],
     fetchLoading: false,
+    createLoading: false,
     trackHistoryLoading: false,
 }
 
@@ -38,7 +40,17 @@ export const tracksSlice = createSlice({
                 state.trackHistoryLoading = false;
             })
             .addCase(addingTracksToHistory.rejected, (state) => {
-            state.trackHistoryLoading = false;
+                state.trackHistoryLoading = false;
+            })
+
+            .addCase(createTrack.pending, (state) => {
+                state.createLoading = true;
+            })
+            .addCase(createTrack.fulfilled, (state) => {
+                state.createLoading = false;
+            })
+            .addCase(createTrack.rejected, (state) => {
+                state.createLoading = false;
             });
     }
 });
