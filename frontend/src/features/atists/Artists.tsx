@@ -12,6 +12,7 @@ import {
     Typography
 } from "@mui/material";
 import {Link} from "react-router-dom";
+import {apiUrl} from "../../../globalConstants.ts";
 
 const Artists = () => {
     const dispatch = useAppDispatch();
@@ -32,7 +33,7 @@ const Artists = () => {
                                 <CardMedia
                                     component="img"
                                     height="200"
-                                    image={artist.image || undefined}
+                                    image={`${apiUrl}/${artist.image}` || undefined}
                                     alt={artist.name}
                                 />
                                 <CardHeader title={artist.name} />
