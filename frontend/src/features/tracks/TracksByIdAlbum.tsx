@@ -38,13 +38,24 @@ const TracksByIdAlbum = () => {
                             {tracks[0].album.name}
                         </Typography>
                     )}
-                    {tracks.map(track => (
+                    {tracks.map(track => {
+                        if (!track.isPublished && user?.role !== 'admin') {
+                            return null;
+                        }
+                    return (
                         <Grid key={track._id} size={{xs:12, sm:6, md:4, lg:3}}>
                             <Card sx={{borderRadius: 3}}>
                                 <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {track.name}
-                                    </Typography>
+                                    <Grid style={{ display: 'flex' }}>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {track.name}
+                                        </Typography>
+                                        {!track.isPublished && user && user.role === 'admin' &&
+                                            (
+                                                <span style={{color: 'red', fontSize: '0.8rem', marginLeft: 'auto'}}> (неопубликовано)</span>
+                                            )
+                                        }
+                                    </Grid>
                                     <Typography gutterBottom variant="h6" component="div">
                                         {track.duration}
                                     </Typography>
@@ -58,7 +69,7 @@ const TracksByIdAlbum = () => {
                                 </CardContent>
                             </Card>
                         </Grid>
-                    ))
+                    )})
                     }
                 </Grid>
             )

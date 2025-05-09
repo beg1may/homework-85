@@ -13,8 +13,10 @@ import {
 } from "@mui/material";
 import {Link} from "react-router-dom";
 import {apiUrl} from "../../../globalConstants.ts";
+import {selectUser} from "../users/usersSlice.ts";
 
 const Artists = () => {
+    const user = useAppSelector(selectUser);
     const dispatch = useAppDispatch();
     const artists = useAppSelector(selectArtist);
 
@@ -28,7 +30,11 @@ const Artists = () => {
                     <Typography variant='h4'>No artists yet</Typography>
                 ) : (
                     <Grid>
-                        {artists.map(artist => (
+                        {artists.map(artist => {
+                            if (!artist.isPublished && user?.role !== 'admin') {
+                            return null;
+                        }
+                            return (
                             <Card key={artist._id}>
                                 <CardMedia
                                     component="img"
@@ -36,14 +42,21 @@ const Artists = () => {
                                     image={`${apiUrl}/${artist.image}` || undefined}
                                     alt={artist.name}
                                 />
-                                <CardHeader title={artist.name} />
+                                <Grid style={{display: 'flex', alignItems: 'center'}}>
+                                    <CardHeader title={artist.name} />
+                                    {!artist.isPublished && user && user.role === 'admin' &&
+                                        (
+                                            <span style={{color: 'red'}}> (неопубликовано)</span>
+                                        )
+                                    }
+                                </Grid>
                                 <CardActions>
                                     <IconButton component={Link} to={'/albums/' + artist._id}>
                                         Перейти
                                     </IconButton>
                                 </CardActions>
                             </Card>
-                        ))
+                        )})
                         }
                     </Grid>
                 )
