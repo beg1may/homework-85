@@ -1,16 +1,18 @@
 import {Artist} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
-import {fetchAllArtists} from "./artistsThunks.ts";
+import {createArtist, fetchAllArtists} from "./artistsThunks.ts";
 import {RootState} from "../../../app/store.ts";
 
 interface ArtistsState {
     items: Artist[];
     fetchLoading: boolean;
+    createLoading: boolean;
 }
 
 const initialState: ArtistsState = {
     items: [],
     fetchLoading: false,
+    createLoading: false,
 }
 
 export const artistsSlice = createSlice({
@@ -29,6 +31,16 @@ export const artistsSlice = createSlice({
             .addCase(fetchAllArtists.rejected, (state) => {
                 state.fetchLoading = false;
             })
+
+            .addCase(createArtist.pending, (state) => {
+                state.createLoading = true;
+            })
+            .addCase(createArtist.fulfilled, (state) => {
+                state.createLoading = false;
+            })
+            .addCase(createArtist.rejected, (state) => {
+                state.createLoading = false;
+            });
     }
 });
 

@@ -8,8 +8,13 @@ import Register from "./features/users/Register.tsx";
 import Login from "./features/users/Login.tsx";
 import AppToolbar from "./components/UI/AppToolbar/AppToolbar.tsx";
 import Track_history from "./features/track_history/Track_history.tsx";
+import NewArtist from "./features/atists/NewArtist.tsx";
+import ProtectedRoute from "./components/UI/ProtectedRoute/ProtectedRoute.tsx";
+import {useAppSelector} from "../app/hooks.ts";
+import {selectUser} from "./features/users/usersSlice.ts";
 
 function App() {
+    const user = useAppSelector(selectUser);
   return (
     <>
         <CssBaseline />
@@ -24,6 +29,9 @@ function App() {
                  <Route path='/albums/:id' element={<AlbumsByIdArtist />}/>
                  <Route path='/tracks/:id' element={<TracksByIdAlbum />}/>
                  <Route path='/track_history' element={<Track_history />}/>
+                 <Route path='/artists/new' element={
+                     <ProtectedRoute isAllowed={Boolean(user)}><NewArtist /></ProtectedRoute>
+                 }/>
                  <Route path="/register" element={<Register/>}/>
                  <Route path="/login" element={<Login />}/>
                  <Route path="*" element={<Typography variant="h4">Not found page</Typography>}/>
