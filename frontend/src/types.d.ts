@@ -22,6 +22,13 @@ export interface AlbumByIdArtistInfo {
     yearOfManufacture: number;
 }
 
+export interface AlbumMutation {
+    name: string;
+    artist: string;
+    image: File | null;
+    yearOfManufacture: number;
+}
+
 export interface TrackByIdAlbum {
     _id: string;
     album: {

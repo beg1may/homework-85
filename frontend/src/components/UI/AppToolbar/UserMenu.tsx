@@ -39,9 +39,14 @@ const UserMenu = () => {
                 onClose={handleClose}
             >
                 {user &&
-                    <MenuItem>
-                        <Button component={NavLink} to='/artists/new'>Add artist</Button>
-                    </MenuItem>
+                    <>
+                        <MenuItem>
+                            <Button component={NavLink} to='/artists/new'>Add artist</Button>
+                        </MenuItem>
+                        <MenuItem>
+                            <Button component={NavLink} to='/albums/new'>Add album</Button>
+                        </MenuItem>
+                    </>
                 }
                 <MenuItem>
                     <Button component={NavLink} to='/track_history'>  Track History </Button>
