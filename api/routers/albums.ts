@@ -3,6 +3,8 @@ import Album from "../models/Album";
 import {IAlbumWithoutId} from "../types";
 import {imagesUpload} from "../multer";
 import {Error} from "mongoose";
+import auth from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const albumsRouter = express.Router();
 
@@ -37,7 +39,7 @@ albumsRouter.get("/:id", async (req, res, next) => {
     }
 });
 
-albumsRouter.post("/", imagesUpload.single('image'), async (req, res, next) => {
+albumsRouter.post("/", auth, imagesUpload.single('image'), async (req, res, next) => {
     try {
         const newAlbum: IAlbumWithoutId = {
             name: req.body.name,
@@ -55,6 +57,49 @@ albumsRouter.post("/", imagesUpload.single('image'), async (req, res, next) => {
             return;
         }
 
+        next(error);
+    }
+});
+
+albumsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        if (!id) {
+            res.status(404).send({ message: 'Album id must be in req params' });
+            return;
+        }
+
+        const album = await Album.findById(id);
+
+        if (!album) {
+            res.status(404).send({ message: 'Album not found' });
+            return;
+        }
+
+        album.isPublished = !album.isPublished;
+
+        await album.save();
+        res.send(album);
+    } catch (e) {
+        next(e);
+    }
+});
+
+albumsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        const album = await Album.findById(id);
+
+        if (!album) {
+            res.status(404).send('Album not found');
+            return;
+        }
+
+        await Album.findByIdAndDelete(id);
+        res.send({message:"Album deleted successfully."});
+    } catch (error) {
         next(error);
     }
 })

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import Artist from "./models/Artist";
 import Album from "./models/Album";
 import Track from "./models/Track";
+import User from "./models/User";
 
 const run = async () => {
     await mongoose.connect(config.db);
@@ -16,7 +17,7 @@ const run = async () => {
         console.error('Collection were not present, skipping drop');
     }
 
-    const [artistTheWeeknd, artistAdele, artistBeyonce] = await Artist.create(
+    const [artistTheWeeknd, artistAdele] = await Artist.create(
         {
             name: "The Weeknd",
             image: "https://upload.wikimedia.org/wikipedia/commons/2/29/The_Weeknd_2015.jpg",
@@ -34,118 +35,114 @@ const run = async () => {
             name: 'After Hours',
             artist: artistTheWeeknd._id,
             yearOfManufacture: 2020,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/6/60/The_Weeknd_-_After_Hours.png'
         },
         {
             name: 'Starboy',
             artist: artistTheWeeknd._id,
             yearOfManufacture: 2016,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/2/2b/The_Weeknd_-_Starboy.png'
         },
         {
             name: '25',
             artist: artistAdele._id,
             yearOfManufacture: 2015,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Adele_25.png'
         },
         {
             name: '21',
             artist: artistAdele._id,
             yearOfManufacture: 2011,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/7/7f/Adele_21.png'
         },
     );
 
     await Track.create(
         {
             name: 'Blinding Lights',
-            album: albumAfterHours,
+            album: albumAfterHours._id,
             duration: '3:20',
             numberTrack: 1,
         },
         {
             name: 'Save Your Tears',
-            album: albumAfterHours,
+            album: albumAfterHours._id,
             duration: '3:35',
             numberTrack: 2,
         },
         {
             name: 'Heartless',
-            album: albumAfterHours,
+            album: albumAfterHours._id,
             duration: '3:18',
             numberTrack: 3,
         },
         {
             name: 'In Your Eyes',
-            album: albumAfterHours,
+            album: albumAfterHours._id,
             duration: '3:58',
             numberTrack: 4,
         },
         {
             name: 'After Hours',
-            album: albumAfterHours,
+            album: albumAfterHours._id,
             duration: '6:02',
             numberTrack: 5,
         },
 
         {
             name: 'Starboy',
-            album: albumStarboy,
+            album: albumStarboy._id,
             duration: '3:50',
             numberTrack: 1,
         },
         {
             name: 'I Feel It Coming',
-            album: albumStarboy,
+            album: albumStarboy._id,
             duration: '4:29',
             numberTrack: 2,
         },
         {
             name: 'Party Monster',
-            album: albumStarboy,
+            album: albumStarboy._id,
             duration: '3:50',
             numberTrack: 3,
         },
         {
             name: 'Reminder',
-            album: albumStarboy,
+            album: albumStarboy._id,
             duration: '4:05',
             numberTrack: 4,
         },
         {
             name: 'Secrets',
-            album: albumStarboy,
+            album: albumStarboy._id,
             duration: '4:13',
             numberTrack: 5,
         },
 
         {
             name: 'Hello',
-            album: album25,
+            album: album25._id,
             duration: '3:55',
             numberTrack: 1,
         },
         {
             name: 'Send My Love (To Your New Lover)',
-            album: album25,
+            album: album25._id,
             duration: '3:43',
             numberTrack: 2,
         },
         {
             name: 'When We Were Young',
-            album: album25,
+            album: album25._id,
             duration: '4:45',
             numberTrack: 3,
         },
         {
             name: 'All I Ask',
-            album: album25,
+            album: album25._id,
             duration: '4:30',
             numberTrack: 4,
         },
         {
             name: 'River Lea',
-            album: album25,
+            album: album25._id,
             duration: '4:40',
             numberTrack: 5,
         },
@@ -153,35 +150,54 @@ const run = async () => {
 
         {
             name: 'Rolling in the Deep',
-            album: album21,
+            album: album21._id,
             duration: '3:48',
             numberTrack: 1,
         },
         {
             name: 'Rumour Has It',
-            album: album21,
+            album: album21._id,
             duration: '3:43',
             numberTrack: 2,
         },
         {
             name: 'Turning Tables',
-            album: album21,
+            album: album21._id,
             duration: '4:11',
             numberTrack: 3,
         },
         {
             name: "Don't You Remember",
-            album: album21,
+            album: album21._id,
             duration: '4:03',
             numberTrack: 4,
         },
         {
             name: 'Set Fire to the Rain',
-            album: album21,
+            album: album21._id,
             duration: '4:02',
             numberTrack: 5,
         },
-    )
+    );
+
+    const john = new User ({
+        username: "John",
+        password: "123",
+        role: 'user',
+    });
+
+    john.generateToken();
+    await john.save();
+
+
+    const jane = new User ({
+        username: "Jane",
+        password: "123",
+        role: 'admin',
+    });
+
+    jane.generateToken();
+    await jane.save();
 
     await db.close();
 }

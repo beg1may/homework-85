@@ -3,6 +3,8 @@ import Artist from "../models/Artist";
 import {Error} from "mongoose";
 import {imagesUpload} from "../multer";
 import {IArtistWithoutId} from "../types";
+import auth from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const artistRouter = express.Router();
 
@@ -15,7 +17,7 @@ artistRouter.get("/", async (req, res, next) => {
     }
 });
 
-artistRouter.post("/", imagesUpload.single('image'), async  (req, res, next) => {
+artistRouter.post("/", auth, imagesUpload.single('image'), async  (req, res, next) => {
     try {
         const newArtist: IArtistWithoutId = {
             name: req.body.name,
@@ -32,6 +34,49 @@ artistRouter.post("/", imagesUpload.single('image'), async  (req, res, next) => 
             return;
         }
 
+        next(error);
+    }
+});
+
+artistRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        if (!id) {
+            res.status(404).send({ message: 'Artist id must be in req params' });
+            return;
+        }
+
+        const artist = await Artist.findById(id);
+
+        if (!artist) {
+            res.status(404).send({ message: 'Artist not found' });
+            return;
+        }
+
+        artist.isPublished = !artist.isPublished;
+
+        await artist.save();
+        res.send(artist);
+    } catch (e) {
+        next(e);
+    }
+});
+
+artistRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        const artist = await Artist.findById(id);
+
+        if (!artist) {
+            res.status(404).send('Artist not found');
+            return;
+        }
+
+        await Artist.findByIdAndDelete(id);
+        res.send({message:"Artist deleted successfully."});
+    } catch (error) {
         next(error);
     }
 })
