@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {useEffect} from "react";
 import {Box, Button, Card, CardContent, Grid, Typography} from "@mui/material";
 import {selectTracksByIdAlbum} from "./tracksSlice.ts";
-import {addingTracksToHistory, fetchTracksByIdAlbum} from "./tracksTunks.ts";
+import {addingTracksToHistory, fetchTracksByIdAlbum, trackDeleted, trackIsPublished} from "./tracksThunks.ts";
 import {selectUser} from "../users/usersSlice.ts";
 
 const TracksByIdAlbum = () => {
@@ -26,6 +26,20 @@ const TracksByIdAlbum = () => {
             dispatch(fetchTracksByIdAlbum(id));
         }
     }, [id, dispatch]);
+
+    const handlePublish = async (track_id: string) => {
+        if(id) {
+            await dispatch(trackIsPublished(track_id));
+            dispatch(fetchTracksByIdAlbum(id));
+        }
+    };
+
+    const handleTrackDelete  = async (track_id: string) => {
+        if(id) {
+            await dispatch(trackDeleted(track_id));
+            dispatch(fetchTracksByIdAlbum(id));
+        }
+    };
 
     return (
         <Box sx={{ padding: 4 }}>
@@ -63,8 +77,18 @@ const TracksByIdAlbum = () => {
                                         Номер трека: {track.numberTrack}
                                     </Typography>
                                     {user ?
-                                        <Button color="inherit" onClick={() => handle(track._id)}>Play</Button>
+                                        <Button type='submit' onClick={() => handle(track._id)}>Play</Button>
                                         : ''
+                                    }
+                                    {!track.isPublished && user && user.role === 'admin' &&
+                                        (
+                                            <Button type='submit' onClick={() => handlePublish(track._id)}>Опубликовать</Button>
+                                        )
+                                    }
+                                    {user && user.role === 'admin' &&
+                                        (
+                                            <Button type='submit' style={{color: 'red'}} onClick={() => handleTrackDelete(track._id)}>Удалить</Button>
+                                        )
                                     }
                                 </CardContent>
                             </Card>

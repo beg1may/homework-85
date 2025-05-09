@@ -1,13 +1,15 @@
 import {AlbumByIdArtistInfo} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../../app/store.ts";
-import {createAlbum, fetchAlbumByIdArtist, fetchAlbums} from "./albumsThunks.ts";
+import {albumDeleted, albumIsPublished, createAlbum, fetchAlbumByIdArtist, fetchAlbums} from "./albumsThunks.ts";
 
 interface AlbumsState {
     items: AlbumByIdArtistInfo[];
     albumByIdArtist: AlbumByIdArtistInfo[];
     fetchLoading: boolean;
     createLoading: boolean;
+    isPublishedLoading: boolean;
+    deleteLoading: boolean;
 }
 
 const initialState: AlbumsState = {
@@ -15,6 +17,8 @@ const initialState: AlbumsState = {
     albumByIdArtist: [],
     fetchLoading: false,
     createLoading: false,
+    isPublishedLoading: false,
+    deleteLoading: false,
 }
 
 export const albumsSlice = createSlice({
@@ -54,6 +58,26 @@ export const albumsSlice = createSlice({
             .addCase(createAlbum.rejected, (state) => {
                 state.createLoading = false;
             })
+
+            .addCase(albumIsPublished.pending, (state) => {
+                state.isPublishedLoading= true;
+            })
+            .addCase(albumIsPublished.fulfilled, (state) => {
+                state.isPublishedLoading = false;
+            })
+            .addCase(albumIsPublished.rejected, (state) => {
+                state.isPublishedLoading = false;
+            })
+
+            .addCase(albumDeleted.pending, (state) => {
+                state.deleteLoading = true;
+            })
+            .addCase(albumDeleted.fulfilled, (state) => {
+                state.deleteLoading = false;
+            })
+            .addCase(albumDeleted.rejected, (state) => {
+                state.deleteLoading = false;
+            });
 
     }
 });

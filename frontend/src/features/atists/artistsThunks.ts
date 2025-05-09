@@ -11,6 +11,30 @@ export const fetchAllArtists = createAsyncThunk<Artist[], void>(
     }
 );
 
+export const artistIsPublished = createAsyncThunk<void, string, { state: RootState }>(
+    'artists/artistIsPublished',
+    async (artist_id, {getState}) => {
+        const token = getState().users.user?.token;
+        await axiosApi.patch(`/artists/${artist_id}/togglePublished`, null, {
+            headers: {
+                'Authorization': token,
+            },
+        });
+    }
+);
+
+export const artistDeleted = createAsyncThunk<void, string, { state: RootState }>(
+    'artists/artistDeleted',
+    async (artist_id, {getState}) => {
+        const token = getState().users.user?.token;
+        await axiosApi.delete(`/artists/${artist_id}`, {
+            headers: {
+                'Authorization': token,
+            },
+        });
+    }
+);
+
 export const createArtist = createAsyncThunk<void, ArtistMutation, { state: RootState }>(
     'artists/createArtist',
     async (artistToAdd,{getState}) => {

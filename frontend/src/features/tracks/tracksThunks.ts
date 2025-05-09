@@ -11,6 +11,18 @@ export const fetchTracksByIdAlbum = createAsyncThunk<TrackByIdAlbum[], string>(
     }
 );
 
+export const trackIsPublished = createAsyncThunk<void, string, { state: RootState }>(
+    'tracks/trackIsPublished',
+    async (track_id, {getState}) => {
+        const token = getState().users.user?.token;
+        await axiosApi.patch(`/tracks/${track_id}/togglePublished`, null, {
+            headers: {
+                'Authorization': token,
+            },
+        });
+    }
+);
+
 export const addingTracksToHistory = createAsyncThunk<void, { id: string, token: string }>(
     'tracks/addTracksToHistory',
     async ({id, token}) => {
@@ -23,6 +35,18 @@ export const addingTracksToHistory = createAsyncThunk<void, { id: string, token:
         } catch (e) {
             console.error(e);
         }
+    }
+);
+
+export const trackDeleted = createAsyncThunk<void, string, { state: RootState }>(
+    'tracks/trackDeleted',
+    async (track_id, {getState}) => {
+        const token = getState().users.user?.token;
+        await axiosApi.delete(`/tracks/${track_id}`, {
+            headers: {
+                'Authorization': token,
+            },
+        });
     }
 );
 

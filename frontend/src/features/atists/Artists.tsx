@@ -1,14 +1,14 @@
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {selectArtist} from "./artistsSlice.ts";
 import {useEffect} from "react";
-import {fetchAllArtists} from "./artistsThunks.ts";
+import {artistDeleted, artistIsPublished, fetchAllArtists} from "./artistsThunks.ts";
 import {
+    Button,
     Card,
     CardActions,
     CardHeader,
     CardMedia,
     Grid,
-    IconButton,
     Typography
 } from "@mui/material";
 import {Link} from "react-router-dom";
@@ -23,6 +23,17 @@ const Artists = () => {
     useEffect(() => {
         dispatch(fetchAllArtists());
     }, [dispatch]);
+
+    const handlePublish = async (artist_id: string) => {
+        await dispatch(artistIsPublished(artist_id));
+        dispatch(fetchAllArtists());
+    };
+
+    const handleArtistDelete  = async (artist_id: string) => {
+        await dispatch(artistDeleted(artist_id));
+        dispatch(fetchAllArtists());
+    };
+
     return (
         <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 10 }} style={{marginTop: "20px"}}>
@@ -51,9 +62,19 @@ const Artists = () => {
                                     }
                                 </Grid>
                                 <CardActions>
-                                    <IconButton component={Link} to={'/albums/' + artist._id}>
-                                        Перейти
-                                    </IconButton>
+                                    <Button component={Link} to={'/albums/' + artist._id}>
+                                        Альбомы
+                                    </Button>
+                                    {!artist.isPublished && user && user.role === 'admin' &&
+                                        (
+                                            <Button type='submit' onClick={() => handlePublish(artist._id)}>Опубликовать</Button>
+                                        )
+                                    }
+                                    {user && user.role === 'admin' &&
+                                        (
+                                            <Button type='submit' style={{color: 'red'}} onClick={() => handleArtistDelete(artist._id)}>Удалить</Button>
+                                        )
+                                    }
                                 </CardActions>
                             </Card>
                         )})

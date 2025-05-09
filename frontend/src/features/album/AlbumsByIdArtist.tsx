@@ -1,17 +1,18 @@
 import {
-    Box,
+    Box, Button,
     Card, CardActions,
     CardContent,
     CardMedia,
-    Grid, IconButton,
+    Grid,
     Typography
 } from "@mui/material";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {Link, useParams} from "react-router-dom";
 import {useEffect} from "react";
 import {selectAlbumByIdArtist} from "./albumsSlice.ts";
-import {fetchAlbumByIdArtist} from "./albumsThunks.ts";
+import {albumDeleted, albumIsPublished, fetchAlbumByIdArtist} from "./albumsThunks.ts";
 import {selectUser} from "../users/usersSlice.ts";
+import {apiUrl} from "../../../globalConstants.ts";
 
 
 const AlbumsByIdArtist = () => {
@@ -26,6 +27,21 @@ const AlbumsByIdArtist = () => {
             dispatch(fetchAlbumByIdArtist(id));
         }
     }, [id, dispatch]);
+
+    const handlePublish = async (album_id: string) => {
+        if(id) {
+            await dispatch(albumIsPublished(album_id));
+            dispatch(fetchAlbumByIdArtist(id));
+        }
+    };
+
+    const handleAlbumDelete  = async (album_id: string) => {
+        if(id) {
+            await dispatch(albumDeleted(album_id));
+            dispatch(fetchAlbumByIdArtist(id));
+        }
+    };
+
     return (
         <Box sx={{ padding: 4 }}>
             {albums[0]?.artist?.name && (
@@ -47,7 +63,7 @@ const AlbumsByIdArtist = () => {
                                 <CardMedia
                                     component="img"
                                     height="200"
-                                    image={album.image || undefined}
+                                    image={`${apiUrl}/${album.image}` || undefined}
                                     alt={album.name}
                                 />
                                 <CardContent>
@@ -66,9 +82,19 @@ const AlbumsByIdArtist = () => {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <IconButton component={Link} to={'/tracks/' + album._id}>
-                                        Перейти
-                                    </IconButton>
+                                    <Button type='submit' component={Link} to={'/tracks/' + album._id}>
+                                        Треки
+                                    </Button>
+                                    {!album.isPublished && user && user.role === 'admin' &&
+                                        (
+                                            <Button type='submit' onClick={() => handlePublish(album._id)}>Опубликовать</Button>
+                                        )
+                                    }
+                                    {user && user.role === 'admin' &&
+                                        (
+                                            <Button type='submit' style={{color: 'red'}} onClick={() => handleAlbumDelete(album._id)}>Удалить</Button>
+                                        )
+                                    }
                                 </CardActions>
                             </Card>
                         </Grid>

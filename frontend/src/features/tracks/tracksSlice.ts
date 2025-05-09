@@ -1,12 +1,21 @@
 import {TrackByIdAlbum} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../../app/store.ts";
-import {addingTracksToHistory, createTrack, fetchTracksByIdAlbum} from "./tracksTunks.ts";
+import {
+    addingTracksToHistory,
+    createTrack,
+    fetchTracksByIdAlbum,
+    trackDeleted,
+    trackIsPublished
+} from "./tracksThunks.ts";
+
 interface TracksState {
     items: TrackByIdAlbum[];
     fetchLoading: boolean;
     createLoading: boolean;
     trackHistoryLoading: boolean;
+    isPublishedLoading: boolean;
+    deleteLoading: boolean;
 }
 
 const initialState: TracksState = {
@@ -14,6 +23,8 @@ const initialState: TracksState = {
     fetchLoading: false,
     createLoading: false,
     trackHistoryLoading: false,
+    isPublishedLoading: false,
+    deleteLoading: false,
 }
 
 export const tracksSlice = createSlice({
@@ -51,7 +62,28 @@ export const tracksSlice = createSlice({
             })
             .addCase(createTrack.rejected, (state) => {
                 state.createLoading = false;
+            })
+
+            .addCase(trackIsPublished.pending, (state) => {
+                state.isPublishedLoading= true;
+            })
+            .addCase(trackIsPublished.fulfilled, (state) => {
+                state.isPublishedLoading = false;
+            })
+            .addCase(trackIsPublished.rejected, (state) => {
+                state.isPublishedLoading = false;
+            })
+
+            .addCase(trackDeleted.pending, (state) => {
+                state.deleteLoading = true;
+            })
+            .addCase(trackDeleted.fulfilled, (state) => {
+                state.deleteLoading = false;
+            })
+            .addCase(trackDeleted.rejected, (state) => {
+                state.deleteLoading = false;
             });
+
     }
 });
 

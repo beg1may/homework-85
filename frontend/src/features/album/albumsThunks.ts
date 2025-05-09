@@ -19,6 +19,30 @@ export const fetchAlbumByIdArtist = createAsyncThunk<AlbumByIdArtistInfo[], stri
     }
 );
 
+export const albumIsPublished = createAsyncThunk<void, string, { state: RootState }>(
+    'albums/albumIsPublished',
+    async (album_id, {getState}) => {
+        const token = getState().users.user?.token;
+        await axiosApi.patch(`/albums/${album_id}/togglePublished`, null, {
+            headers: {
+                'Authorization': token,
+            },
+        });
+    }
+);
+
+export const albumDeleted = createAsyncThunk<void, string, { state: RootState }>(
+    'albums/albumDeleted',
+    async (album_id, {getState}) => {
+        const token = getState().users.user?.token;
+        await axiosApi.delete(`/albums/${album_id}`, {
+            headers: {
+                'Authorization': token,
+            },
+        });
+    }
+);
+
 export const createAlbum = createAsyncThunk<void, AlbumMutation, { state: RootState }>(
     'albums/createAlbum',
     async (albumToAdd,{getState}) => {

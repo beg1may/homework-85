@@ -1,18 +1,22 @@
 import {Artist} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
-import {createArtist, fetchAllArtists} from "./artistsThunks.ts";
+import {artistDeleted, artistIsPublished, createArtist, fetchAllArtists} from "./artistsThunks.ts";
 import {RootState} from "../../../app/store.ts";
 
 interface ArtistsState {
     items: Artist[];
     fetchLoading: boolean;
     createLoading: boolean;
+    isPublishedLoading: boolean;
+    deleteLoading: boolean;
 }
 
 const initialState: ArtistsState = {
     items: [],
     fetchLoading: false,
     createLoading: false,
+    isPublishedLoading: false,
+    deleteLoading: false,
 }
 
 export const artistsSlice = createSlice({
@@ -40,6 +44,26 @@ export const artistsSlice = createSlice({
             })
             .addCase(createArtist.rejected, (state) => {
                 state.createLoading = false;
+            })
+
+            .addCase(artistIsPublished.pending, (state) => {
+                state.isPublishedLoading= true;
+            })
+            .addCase(artistIsPublished.fulfilled, (state) => {
+                state.isPublishedLoading = false;
+            })
+            .addCase(artistIsPublished.rejected, (state) => {
+                state.isPublishedLoading = false;
+            })
+
+            .addCase(artistDeleted.pending, (state) => {
+                state.deleteLoading = true;
+            })
+            .addCase(artistDeleted.fulfilled, (state) => {
+                state.deleteLoading = false;
+            })
+            .addCase(artistDeleted.rejected, (state) => {
+                state.deleteLoading = false;
             });
     }
 });
