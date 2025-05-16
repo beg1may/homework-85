@@ -1,14 +1,20 @@
-import {Button, Grid, Menu, MenuItem} from "@mui/material";
+import {Button, Grid, Menu, MenuItem, Typography} from "@mui/material";
 import {NavLink} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../../../app/hooks";
 import {toast} from "react-toastify";
 import {logout} from "../../../features/users/usersThunks.ts";
 import {selectUser, unsetUsers} from "../../../features/users/usersSlice.ts";
 import {useState} from "react";
+import Avatar from "@mui/material/Avatar";
 
 const UserMenu = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectUser);
+
+    if (!user) {
+        return null;
+    }
+
     const handleLogout = async () => {
         await dispatch(logout());
         dispatch(unsetUsers());
@@ -30,7 +36,16 @@ const UserMenu = () => {
                 onClick={handleClick}
                 color="inherit"
             >
-                menu
+                <MenuItem>
+                    <Avatar
+                        src={user.avatar || undefined}
+                        alt={user.displayName}
+                        sx={{width: 32, height: 32, mr: 1}}
+                    />
+                </MenuItem>
+                <Typography variant="body1" component="span">
+                    {user.displayName}
+                </Typography>
             </Button>
             <Menu
                 keepMounted

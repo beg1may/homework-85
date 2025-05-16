@@ -1,7 +1,6 @@
 import express from "express";
 import Track from "../models/Track";
 import {Error} from "mongoose";
-import {ITrackWithoutId} from "../types";
 import auth from "../middleware/auth";
 import permit from "../middleware/permit";
 
@@ -22,14 +21,13 @@ trackRouter.get('/', async (req, res, next) => {
 
 trackRouter.post("/", auth, async (req, res, next) => {
     try {
-        const newTrack: ITrackWithoutId = {
+        const track = new Track ({
             name: req.body.name,
             album: req.body.album,
             duration: req.body.duration,
             numberTrack: req.body.numberTrack,
-        }
+        })
 
-        const track = new Track(newTrack);
         await track.save();
         res.send(track);
     } catch (error) {

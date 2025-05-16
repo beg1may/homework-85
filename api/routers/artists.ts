@@ -2,7 +2,6 @@ import express from "express";
 import Artist from "../models/Artist";
 import {Error} from "mongoose";
 import {imagesUpload} from "../multer";
-import {IArtistWithoutId} from "../types";
 import auth from "../middleware/auth";
 import permit from "../middleware/permit";
 
@@ -19,13 +18,12 @@ artistRouter.get("/", async (req, res, next) => {
 
 artistRouter.post("/", auth, imagesUpload.single('image'), async  (req, res, next) => {
     try {
-        const newArtist: IArtistWithoutId = {
+        const artist = new Artist ({
             name: req.body.name,
             image: req.file ? 'images/' + req.file.filename : null,
             information: req.body.information,
-        };
+        });
 
-        const artist = new Artist(newArtist);
         await artist.save();
         res.send(artist);
     } catch (error) {

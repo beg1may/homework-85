@@ -21,6 +21,8 @@ const Register = () => {
     const [form, setForm] = useState<RegisterMutation>({
         username: '',
         password: '',
+        displayName: '',
+        avatar: '',
     });
 
 
@@ -64,6 +66,34 @@ const Register = () => {
             </Typography>
             <Box component="form" noValidate onSubmit={onSubmitFormHandler} sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
+                    <Grid size={{xs: 12}}>
+                        <TextField
+                            disabled={registerLoading}
+                            fullWidth
+                            id="displayName"
+                            label="Display Name"
+                            name="displayName"
+                            value={form.displayName}
+                            onChange={onInputChange}
+                            helperText={getFieldError('displayName')}
+                            error={Boolean(getFieldError('displayName'))}
+                        />
+                    </Grid>
+
+                    <Grid size={{xs: 12}}>
+                        <TextField
+                            disabled={registerLoading}
+                            fullWidth
+                            id="avatar"
+                            label="Avatar"
+                            name="avatar"
+                            value={form.avatar}
+                            onChange={onInputChange}
+                            helperText={getFieldError('avatar')}
+                            error={Boolean(getFieldError('avatar'))}
+                        />
+                    </Grid>
+
                     <Grid  size={{xs: 12}}>
                         <TextField
                             disabled={registerLoading}

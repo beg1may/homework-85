@@ -1,5 +1,9 @@
 export interface Artist {
     _id: string;
+    username: {
+        _id: string;
+        username: string;
+    }
     name: string;
     image?: string | null;
     information: string;
@@ -37,6 +41,10 @@ export interface TrackByIdAlbum {
         _id: string;
         name: string;
     };
+    username: {
+        _id: string;
+        username: string;
+    };
     numberTrack: number;
     name: string;
     duration: string;
@@ -52,6 +60,8 @@ export interface TrackMutation {
 
 export interface User {
     _id: string;
+    displayName: string;
+    avatar: string;
     username: string;
     token: string;
     role: string;
@@ -72,6 +82,8 @@ export interface ValidationError {
 export interface RegisterMutation {
     username: string;
     password: string;
+    displayName: string;
+    avatar?: string;
 }
 
 export interface LoginMutation {

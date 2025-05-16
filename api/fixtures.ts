@@ -210,7 +210,9 @@ const run = async () => {
     const john = new User ({
         username: "John",
         password: "123",
+        confirmPassword: "123",
         role: 'user',
+        displayName: "John Doe",
     });
 
     john.generateToken();
@@ -220,7 +222,9 @@ const run = async () => {
     const jane = new User ({
         username: "Jane",
         password: "123",
+        confirmPassword: "123",
         role: 'admin',
+        displayName: "Jane Smith",
     });
 
     jane.generateToken();
